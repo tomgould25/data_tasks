@@ -4,9 +4,9 @@ from datetime import datetime
 
 # File paths
 input_file = "sales - sales.csv"
-output_file = "yearly_revenue_summary.csv"
+output_file = "weekly_revenue_summary.csv"
 
-# Dictionary: {(year, region): revenue_sum}
+# Dictionary: {(year, week, region): revenue_sum}
 revenue_data = defaultdict(float)
 
 # Read the CSV
@@ -33,28 +33,26 @@ with open(input_file, newline="", encoding="utf-8") as f:
     for (date, region), metrics in records.items():
         if "units" in metrics and "price" in metrics:
             revenue = metrics["units"] * metrics["price"]
-            year = date.year
-            revenue_data[(year, region)] += revenue
+            iso_year, iso_week, _ = date.isocalendar()
+            revenue_data[(iso_year, iso_week, region)] += revenue
+
 # Prepare the output data
-years = sorted({year for (year, _) in revenue_data.keys()})
-regions = sorted({region for (_, region) in revenue_data.keys()})
+weeks = sorted({(year, week) for (year, week, _) in revenue_data.keys()})
+regions = sorted({region for (_, _, region) in revenue_data.keys()})
+
 # Write the output CSV
 with open(output_file, "w", newline="", encoding="utf-8") as f:
     writer = csv.writer(f)
 
-    writer.writerow(["Year"] + regions)
+    writer.writerow(["Week"] + regions)
 
-    for year in years:
-        row = [year]
+    for (year, week) in weeks:
+        week_label = f"{year}-W{week:02d}"
+        row = [week_label]
         for region in regions:
-            revenue = revenue_data.get((year, region), 0.0)
+            revenue = revenue_data.get((year, week, region), 0.0)
             row.append(round(revenue / 1_000_000, 2))  # in millions
         writer.writerow(row)
 
-print("Revenue summary saved as 'yearly_revenue_summary.csv'")
-# This code reads sales data from a CSV file, calculates the total revenue for each region by year,
-# and writes the results to a new CSV file in a summarized format.
-# The output file will contain the year as the first column and each region's revenue in subsequent columns.
-# The revenue is calculated as the product of units sold and price, and is rounded to two decimal places in millions.
-# The code handles missing or invalid values by treating them as zero. As a result of an issue with the original code,
-# the revenue for each region is now correctly calculated and displayed in the output file.
+print("Revenue summary saved as 'weekly_revenue_summary.csv'")
+# Now the output file contains weekly revenue summaries per region.
