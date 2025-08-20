@@ -13,4 +13,8 @@ Region E92000001 has as stated prior a clear revenue lead, showing strong growth
 Region S92000003 had a drop in revenue during 2023, even hitting zero in some weeks. This was not the case in 2024.
 W92000004 had no cases worth noting staying stable throughout the recorded data set.
 From this I would say it could be worth investigating the 2023 dip in S92000003 and putting more resources into E92000001 due to its upwards trend and revenue lead.
-6. 
+6. I have produced in task6.py using the atl.json data a table which provides the requested information. As I have no prior experience with parquet data files I have produced a json only file for now as from my research online I'd need to take time to setup the pandas DataFrame to optimally handle the data which my mac hasn't got setup.
+7.TV dominates the spend overall, especially in region E92000001 (£2.90), which is significantly higher than the others.
+Outdoor advertising is also concentrated in E92000001, but it drops sharply in S92000003 and is nonexistent in W92000004.
+W92000004 has the lowest overall spend, with only minor investment in TV and none in outdoor.
+8.
